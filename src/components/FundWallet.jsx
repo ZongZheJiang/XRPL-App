@@ -13,24 +13,25 @@ export default function FundWallet() {
     }
     setLoading(true);
     setMessage("Sending request...");
+    setAddress(address);
     try {
-      const response = await fetch("http://127.0.0.1:8000/fund_wallet", {
+      const response = await fetch(`/api/fund-wallet`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ address }),
       });
-  
+
       const text = await response.text();
       console.log("Response text:", text);
-  
+
       if (!text) {
         setMessage("Error: Empty response from backend.");
         setLoading(false);
         return;
       }
-  
+
       const data = JSON.parse(text);
-  
+
       if (data.success) {
         setMessage(`Success! ${data.message}`);
       } else {
@@ -41,7 +42,6 @@ export default function FundWallet() {
     }
     setLoading(false);
   };
-  
 
   return (
     <div className="flex items-center justify-center w-screen">
@@ -57,7 +57,11 @@ export default function FundWallet() {
               style={{ width: "100%", padding: "8px", fontSize: "1rem" }}
               disabled={loading}
             />
-            <button type="submit" disabled={loading} style={{ marginTop: "10px", padding: "8px 16px" }}>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{ marginTop: "10px", padding: "8px 16px" }}
+            >
               {loading ? "Requesting..." : "Request Test XRP"}
             </button>
           </form>

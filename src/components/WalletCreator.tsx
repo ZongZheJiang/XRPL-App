@@ -1,37 +1,36 @@
+// components/WalletCreator.jsx
+"use client"; // This component uses state and event handlers
+
 import React, { useState } from "react";
 
-interface WalletCreatorProps {
-  onWalletCreated: () => Promise<void>;
-}
+// Define the type for the wallet data we expect from the API
+type WalletData = {
+  address: string;
+  secret: string; // The API returns 'secret', not 'seed'
+};
 
-const WalletCreator: React.FC<WalletCreatorProps> = ({ onWalletCreated }) => {
-  const [wallet, setWallet] = useState(null);
+// No props are needed now
+const WalletCreator = () => {
+  const [wallet, setWallet] = useState<WalletData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  type Wallet = {
-    address: string;
-    seed: string;
-    publicKey: string;
-    privateKey: string;
-  };
-
-  const handleCreate = async () => {
+  const handleCreateWallet = async () => {
     setLoading(true);
     setError(null);
-    setWallet(null);
+    setWallet(null); // Clear previous results
 
     try {
+      // Use a relative URL - this is a best practice
       const response = await fetch("/api/create-wallet", {
         method: "POST",
       });
 
       if (!response.ok) {
-        // Handle HTTP errors like 404 or 500
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const data: Wallet = await response.json();
+      const data: WalletData = await response.json();
       setWallet(data);
     } catch (err: any) {
       setError(err.message);
@@ -40,26 +39,45 @@ const WalletCreator: React.FC<WalletCreatorProps> = ({ onWalletCreated }) => {
     }
   };
 
+  // The component now renders its own card layout
   return (
-    <div>
-      <button onClick={handleCreate} disabled={loading}>
-        {loading ? "Creating Wallet..." : "Create Wallet"}
-      </button>
+    <div className="card w-full max-w-md bg-base-100 shadow-xl">
+      <div className="card-body">
+        <h2 className="card-title">Create XRPL Wallet</h2>
+        <p>Click the button to generate a new wallet address and secret.</p>
 
-      {error && (
-        <div style={{ color: "red", marginTop: "10px" }}>Error: {error}</div>
-      )}
-
-      {wallet && (
-        <div style={{ marginTop: "10px" }}>
-          <div>
-            <strong>Address:</strong> {wallet.address}
-          </div>
-          <div>
-            <strong>Secret:</strong> {wallet.secret}
-          </div>
+        <div className="card-actions justify-center mt-4">
+          <button
+            onClick={handleCreateWallet}
+            disabled={loading}
+            className="btn btn-primary"
+          >
+            {loading ? "Creating Wallet..." : "Create New Wallet"}
+          </button>
         </div>
-      )}
+
+        {/* Display Error State */}
+        {error && (
+          <div className="text-red-500 mt-4">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {/* Display Success State */}
+        {wallet && (
+          <div className="mt-4 p-4 bg-gray-100 rounded-lg space-y-2">
+            <h3 className="font-bold text-green-600">
+              Wallet Created Successfully!
+            </h3>
+            <div className="break-words">
+              <strong>Address:</strong> {wallet.address}
+            </div>
+            <div className="break-words">
+              <strong>Secret:</strong> {wallet.secret}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

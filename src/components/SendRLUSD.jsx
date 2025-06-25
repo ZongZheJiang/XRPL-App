@@ -5,11 +5,14 @@ const API_BASE = "http://127.0.0.1:8000";
 
 async function sendRLUSD(recipient, amount) {
   try {
-    const response = await axios.post(`${API_BASE}/send_rlusd`, {
-      destination: recipient,
-      amount,
+    const response = await fetch(`/api/send-rlusd?address=${walletAddress}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address }),
     });
-    return response.data;
+
+    const text = await response.text();
+    console.log("Response text:", text);
   } catch (error) {
     throw new Error(
       error.response?.data?.error || error.message || "Failed to send RLUSD",

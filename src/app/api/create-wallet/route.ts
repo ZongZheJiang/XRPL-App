@@ -1,23 +1,27 @@
 // app/api/create-wallet/route.ts
-import { NextResponse } from "next/server";
-import { Wallet } from "xrpl";
+import { NextResponse } from 'next/server';
+import { Wallet } from 'xrpl';
+import { readWallets, writeWallets, WalletData } from '@/lib/db';
 
-// This function handles POST requests to /api/create-wallet
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const newWallet = Wallet.generate(); // The xrpl.js equivalent
+    const wallet = Wallet.generate();
+    const wallets = await readWallets();
+
+    const newWalletData: WalletData = {
+      seed: wallet.seed!,
+      classicAddress: wallet.classicAddress,
+      publicKey: wallet.publicKey,
+    };
+
+    wallets[wallet.classicAddress] = newWalletData;
+    await writeWallets(wallets);
 
     return NextResponse.json({
-      address: newWallet.classicAddress,
-      seed: newWallet.seed,
-      publicKey: newWallet.publicKey,
-      privateKey: newWallet.privateKey,
+      address: wallet.classicAddress,
+      secret: wallet.seed,
     });
-  } catch (error) {
-    console.error("Error creating wallet:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 },
-    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

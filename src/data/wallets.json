@@ -1,5 +1,35 @@
 {
   "rLXAY2kyg7HZQhEbhMagMBvP9GTe58XBWY": {
     "seed": "sEdVw9BxjvEbhcdKjY6ve4rzm7YWcfc"
+  },
+  "rsUCL53AB8j2xoMkkB6cLdY7SYqpqKd6RD": {
+    "seed": "sEd7BHqPe5t41ChnBixGkHfcHnax8ue",
+    "classicAddress": "rsUCL53AB8j2xoMkkB6cLdY7SYqpqKd6RD",
+    "publicKey": "ED5204A49F9569A324F8A5A58A1D64B4C12D8210E5E7C412B55D727583CE5F40D9"
+  },
+  "r92F1EyAPULtVwamc5QkrXwvr2F38ie9d9": {
+    "seed": "sEd7BDySaZGLaB1pAYdiai5EKQfQ4Hc",
+    "classicAddress": "r92F1EyAPULtVwamc5QkrXwvr2F38ie9d9",
+    "publicKey": "ED8773121BC0C6F5F24D20AB86A1399F52854D3D0B4EF4DEFA28A5362D453A47DC"
+  },
+  "rEzqekJdpjnMdWBVmUQd9uUjpUmfXVTG1j": {
+    "seed": "sEdVGTiuzv3TBYLEFnjFVvgstGn2eFh",
+    "classicAddress": "rEzqekJdpjnMdWBVmUQd9uUjpUmfXVTG1j",
+    "publicKey": "ED34DD761463347F3EE6E291B840F433B16E1510D9C5758381B3EC770A1EF4E7C8"
+  },
+  "rKk2HranExDG8NDbb3QMbq8NxyKuyRMsfQ": {
+    "seed": "sEdTRdEPVaenB34WZbH1e2xHtYq5zdr",
+    "classicAddress": "rKk2HranExDG8NDbb3QMbq8NxyKuyRMsfQ",
+    "publicKey": "ED318259DF24131AF9D8C80040EDA615D8D09AB57C1C3A43A78EFA46BC89BF51FA"
+  },
+  "rKCpy7RWFMvnKCR8TURFrXgMpKHkUXVWgc": {
+    "seed": "sEd71U3dQQiJU8yZA3ZjVBEYLhdhnhs",
+    "classicAddress": "rKCpy7RWFMvnKCR8TURFrXgMpKHkUXVWgc",
+    "publicKey": "EDE339487BCE8C4091E113E7EFAD82258F03F6400B2BFAA8DA858329E5744F8590"
+  },
+  "rGM1KQTcnFhZDnLmKABS3UX8crP3Kzf1zX": {
+    "seed": "sEd7vjD77zpXkGQjtVjnpf7jdpikWhx",
+    "classicAddress": "rGM1KQTcnFhZDnLmKABS3UX8crP3Kzf1zX",
+    "publicKey": "ED9CD8AA77C7CC4ECC14EE6C70A2E2396E1D0325F7233D392B2A1BA89C5B1E628D"
   }
 }

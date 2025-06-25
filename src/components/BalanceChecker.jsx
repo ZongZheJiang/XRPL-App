@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
-// import { checkBalances } from '../api';
+import { set } from "zod";
 
 const BalanceChecker = () => {
   const [walletAddress, setWalletAddress] = useState("");
@@ -7,22 +9,26 @@ const BalanceChecker = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleCheckBalances = async () => {
-    if (!walletAddress) {
-      setError("Please enter a wallet address");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
+  const handleCheckBalance = async (address) => {
     try {
-      const result = await checkBalances(walletAddress);
-      setBalances(result);
-    } catch (err) {
-      setError(err.message || "An error occurred while fetching balances");
-    } finally {
-      setLoading(false);
+      const response = await fetch(`/api/check-balances`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address: walletAddress }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch balance");
+      }
+
+      const data = await response.json();
+      console.log("Balance Data:", data);
+      setBalances(data);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -41,8 +47,7 @@ const BalanceChecker = () => {
               placeholder="Enter XRP wallet address"
             />
           </div>
-
-          <button onClick={handleCheckBalances} disabled={loading}>
+          <button onClick={handleCheckBalance} disabled={loading}>
             {loading ? "Checking..." : "Check Balances"}
           </button>
 
@@ -52,13 +57,20 @@ const BalanceChecker = () => {
             <div className="balance-results">
               <h3>Balance Results</h3>
               <p>
-                <strong>Wallet Address:</strong> {balances.wallet_address}
+                <strong>Wallet Address:</strong> {balances.address}
               </p>
               <p>
-                <strong>XRP Balance:</strong> {balances.xrp_balance} XRP
+                <strong>XRP Balance:</strong> {balances.xrpBalance} XRP
               </p>
               <p>
-                <strong>RLUSD Balance:</strong> {balances.rlusd_balance} RLUSD
+                {/* CORRECT: Find the RLUSD token in the 'issuedBalances' array */}
+                <strong>RLUSD Balance:</strong>{" "}
+                {
+                  balances.issuedBalances?.find(
+                    (token) => token.currency === "RLUSD",
+                  )?.value || "0.00" /* Show '0.00' if not found */
+                }{" "}
+                RLUSD
               </p>
             </div>
           )}
