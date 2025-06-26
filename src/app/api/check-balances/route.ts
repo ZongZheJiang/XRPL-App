@@ -63,6 +63,14 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!XRPL_CLIENT_URL) {
+    console.error("CRITICAL: XRPL_CLIENT_URL environment variable is not set.");
+    return NextResponse.json(
+      { message: "Server is not configured correctly." },
+      { status: 500 }
+    );
+  }
+
     return NextResponse.json(
       { message: "An error occurred while fetching the balance." },
       { status: 500 }, // Internal Server Error
