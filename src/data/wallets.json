@@ -31,5 +31,15 @@
     "seed": "sEd7vjD77zpXkGQjtVjnpf7jdpikWhx",
     "classicAddress": "rGM1KQTcnFhZDnLmKABS3UX8crP3Kzf1zX",
     "publicKey": "ED9CD8AA77C7CC4ECC14EE6C70A2E2396E1D0325F7233D392B2A1BA89C5B1E628D"
+  },
+  "raZphJChbecFwhQbEETNuwpYt6VygWrcTi": {
+    "seed": "sEdTz5dyxCZaqJhvwRA8HXAfb4kQNcS",
+    "classicAddress": "raZphJChbecFwhQbEETNuwpYt6VygWrcTi",
+    "publicKey": "EDB197F1845775D9979E1AA9DAD8494D274E508EA1AF6582C6DC2185A7FE0F33E9"
+  },
+  "rUixJq9a6CPaAgRJyqAtZmdLU5HWBA4Aej": {
+    "seed": "sEdTw2S9yUUSs4yQzjY9Kzj6H6ciToe",
+    "classicAddress": "rUixJq9a6CPaAgRJyqAtZmdLU5HWBA4Aej",
+    "publicKey": "ED4CB16EB58E59BDADA2AF1E9BA36E6EE152DC93F74A1C6EA7ABFBCDFF31933D93"
   }
 }

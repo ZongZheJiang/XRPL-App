@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import FundWallet from "../../components/FundWallet";
 import SendRLUSD from "../../components/SendRLUSD";
 
-const ISSUER_ADDRESS = "rEBQEFvhgZKEbUMSFcwe5SM7FyEDN26zRL";
-
 const handleFundWallet = () => {
   const [wallet, setWallet] = useState(null);
 
