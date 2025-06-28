@@ -22,6 +22,13 @@ export async function POST() {
       secret: wallet.seed,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+   return NextResponse.json(
+      {
+        message: "Server crashed during wallet creation. See details below.",
+        error_message: error.message, // e.g., "t.mask is not a function"
+        error_stack: error.stack,     // The full stack trace
+      },
+      { status: 500 } // Keep the 500 status code
+    );
   }
 }

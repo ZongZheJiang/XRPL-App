@@ -27,7 +27,14 @@ const WalletCreator = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        // ...read the detailed JSON error object we created on the server.
+        const errorData = await response.json();
+        
+        // Log the entire error object to the browser console.
+        console.error("SERVER CRASH DETAILS:", errorData);
+
+        // Throw an error with the specific message from the server.
+        throw new Error(`Server Error: ${errorData.error_message || 'Unknown error'}`);
       }
 
       const data: WalletData = await response.json();
