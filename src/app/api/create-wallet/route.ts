@@ -1,21 +1,26 @@
 // app/api/create-wallet/route.ts
 import { NextResponse } from 'next/server';
 import { Wallet } from 'xrpl';
-import { readWallets, writeWallets, WalletData } from '@/lib/db';
+import { supabase } from '@/lib/db';
+import { create } from 'domain';
+
+type WalletData = {
+  classic_address: string;
+  public_key: string;
+  seed: string;
+};
 
 export async function POST() {
   try {
     const wallet = Wallet.generate();
-    const wallets = await readWallets();
 
     const newWalletData: WalletData = {
+      classic_address: wallet.classicAddress,
+      public_key: wallet.publicKey,
       seed: wallet.seed!,
-      classicAddress: wallet.classicAddress,
-      publicKey: wallet.publicKey,
     };
 
-    wallets[wallet.classicAddress] = newWalletData;
-    await writeWallets(wallets);
+    await supabase.from('wallets').insert(newWalletData);
 
     return NextResponse.json({
       address: wallet.classicAddress,

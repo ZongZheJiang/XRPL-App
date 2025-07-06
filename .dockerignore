@@ -1,0 +1,20 @@
+# Git files
+.git
+.gitignore
+
+# Node dependencies and local build artifacts
+node_modules
+.next
+npm-debug.log
+
+# Environment variables (these should be passed in at runtime)
+.env
+.env.local
+.env.production
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Misc
+README.md

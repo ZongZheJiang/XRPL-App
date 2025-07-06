@@ -1,66 +1,71 @@
-# syntax=docker.io/docker/dockerfile:1
+# ====================================================================================
+# STAGE 1: Dependency Installation
+# ====================================================================================
+# Use a specific LTS version of Node.js on a lean Alpine base.
+# Using 'AS' gives this stage a name we can reference later.
+FROM node:20-alpine AS dependencies
 
-FROM node:18-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Set the working directory in the container.
+# All subsequent commands will run from this path.
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Copy the package.json and the lock file. The wildcard (*) ensures
+# both package.json and package-lock.json (or yarn.lock, pnpm-lock.yaml) are copied.
+COPY package*.json ./
 
+# Use 'npm ci' instead of 'npm install'. It's faster and more secure for
+# production builds as it uses the lock file to ensure exact dependency versions.
+RUN npm ci
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# ====================================================================================
+# STAGE 2: Application Builder
+# ====================================================================================
+# Start a new stage from the previous one, inheriting all its files.
+FROM dependencies AS builder
+
+ARG XRPL_CLIENT_URL="wss://s.altnet.rippletest.net:51233" \ WS_NO_BUFFER_UTIL
+
+ENV XRPL_CLIENT_URL=${XRPL_CLIENT_URL}
+# Copy the rest of your application source code.
+# This is done in a separate step to leverage Docker's layer caching.
+# The 'npm ci' layer above will only be re-run if package*.json changes.
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED=1
+# Run the build script defined in your package.json.
+# This will create the optimized production build in the /.next directory.
+RUN npm run build
 
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# ====================================================================================
+# STAGE 3: Production Runner
+# ====================================================================================
+# Start from a fresh, minimal base image for the final production stage.
+FROM node:20-alpine AS runner
 
-# Production image, copy all the files and run next
-FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
+# Create a non-root user and group for security purposes.
+# Running containers as root is a major security risk.
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 USER nextjs
 
+# Copy only the necessary artifacts from the 'builder' stage.
+# This is the key to a small and secure final image.
+# We copy node_modules, package.json (for 'npm start'), the public folder,
+# and the compiled .next folder.
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+
+# Copy the standalone output from the build stage.
+# The folder structure within .next/standalone is designed for this.
+COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
+
+
+# Expose the port that the Next.js application runs on.
+# This is documentation; you still need to map it with `docker run -p`.
 EXPOSE 3000
 
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
+# The command to start the application.
+# It uses the 'start' script from your package.json.
+# Using the exec form `[]` is important for proper signal handling (e.g., CTRL+C).
 CMD ["node", "server.js"]

@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^6.11.0",
+    "@supabase/supabase-js": "^2.50.3",
     "daisyui": "^5.0.43",
     "next": "15.3.3",
+    "prisma": "^6.11.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.6.2",
