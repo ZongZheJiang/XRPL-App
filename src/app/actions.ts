@@ -1,7 +1,7 @@
 // FILE: /app/actions.ts
 'use server'; // This directive is crucial
 
-import { db } from '@/lib/db';
+import { db } from '@/lib/supabaseClient';
 import { revalidatePath } from 'next/cache';
 
 // This function ONLY runs on the server

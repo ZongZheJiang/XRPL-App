@@ -34,22 +34,22 @@ const Navbar = () => {
           />
           <ul className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
             <li onClick={redirectPage}>
-              <Link href="/create-wallet">Create Wallet</Link>
+              <Link href="/homepage/create-wallet">Create Wallet</Link>
             </li>
             <li onClick={redirectPage}>
-              <Link href="/create-smart-contract">Create Smart Contract</Link>
+              <Link href="/homepage/create-smart-contract">Create Smart Contract</Link>
             </li>
             <li onClick={redirectPage}>
-              <Link href="/transfer-money">Transfer Money</Link>
+              <Link href="/homepage/transfer-money">Transfer Money</Link>
             </li>
             <li onClick={redirectPage}>
-              <Link href="/organisations">Organisations List</Link>
+              <Link href="/homepage/organisations">Organisations List</Link>
             </li>
             <li onClick={redirectPage}>
-              <Link href="/create-trustline">Create Trustline</Link>
+              <Link href="/homepage/create-trustline">Create Trustline</Link>
             </li>
             <li onClick={redirectPage}>
-              <Link href="/fund-wallet">Fund Wallet</Link>
+              <Link href="/homepage/fund-wallet">Fund Wallet</Link>
             </li>
           </ul>
         </div>

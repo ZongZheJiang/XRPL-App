@@ -1,7 +1,7 @@
 // app/api/create-wallet/route.ts
 import { NextResponse } from 'next/server';
 import { Wallet } from 'xrpl';
-import { supabase } from '@/lib/db';
+import { supabase } from '@/lib/supabaseClient';
 import { create } from 'domain';
 
 type WalletData = {

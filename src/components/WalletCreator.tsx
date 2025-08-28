@@ -1,5 +1,5 @@
 // components/WalletCreator.jsx
-"use client"; // This component uses state and event handlers
+"use client"; 
 
 import React, { useState } from "react";
 

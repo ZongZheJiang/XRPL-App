@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { Client, dropsToXrp } from "xrpl";
 
-const XRPL_CLIENT_URL = process.env.XRPL_CLIENT_URL;
+const XRPL_CLIENT_URL = process.env.XRPL_CLIENT_URL || "";
 
 export async function POST(request: Request) {
   const body = await request.json();

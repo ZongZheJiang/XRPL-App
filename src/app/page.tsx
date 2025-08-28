@@ -23,10 +23,10 @@ function Home() {
           </h1>
           <div className="flex flex-row justify-center items-center gap-4 mt-6">
             <button className="btn btn-primary text-neutral-content text-base md:text-lg px-6 py-2">
-              <Link href="/create-wallet">Create Wallet</Link>
+              <Link href="/login">Log In</Link>
             </button>
             <button className="btn btn-primary text-neutral-content text-base md:text-lg px-6 py-2">
-              <Link href="/send-currency">Send Currency</Link>
+              <Link href="/signup">Sign Up</Link>
             </button>
           </div>
         </div>

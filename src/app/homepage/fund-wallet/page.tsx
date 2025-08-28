@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import FundWallet from "../../components/FundWallet";
-import SendRLUSD from "../../components/SendRLUSD";
+import FundWallet from "@/components/FundWallet";
+import SendRLUSD from "@/components/SendRLUSD";
 import PaymentForm from "@/components/PaymentForm";
 
 const handleFundWallet = () => {
