@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Client, Wallet, xrpToDrops, isoTimeToRippleTime } from 'xrpl';
 import * as crypto from 'crypto';
-import { supabase } from '@/lib/supabaseClient'; // Your Supabase client
+import supabase from '@/lib/supabaseClient'; // Your Supabase client
 
 // --- In a real app, these would come from a secure vault/KMS ---
 const BUYER_WALLET_SEED = process.env.BUYER_WALLET_SEED!; 
@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Missing sellerAddress or amountXrp' }, { status: 400 });
   }
 
-  const client = new Client(XRPL_NODE);
-  await client.connect();
+  const xrplClient = new Client(XRPL_NODE);
+  await xrplClient.connect();
 
   try {
     const buyerWallet = Wallet.fromSeed(BUYER_WALLET_SEED);
@@ -40,9 +40,9 @@ export async function POST(request: Request) {
       DestinationTag: 1, // Optional: for exchanges
     };
 
-    const preparedTx = await client.autofill(escrowTx);
+    const preparedTx = await xrplClient.autofill(escrowTx);
     const signedTx = buyerWallet.sign(preparedTx);
-    const txResult = await client.submitAndWait(signedTx.tx_blob);
+    const txResult = await xrplClient.submitAndWait(signedTx.tx_blob);
 
     if (txResult.result.meta?.TransactionResult !== 'tesSUCCESS') {
         throw new Error(`Escrow creation failed: ${txResult.result.meta?.TransactionResult}`);
@@ -62,11 +62,11 @@ export async function POST(request: Request) {
     
     if (error) throw error;
 
-    await client.disconnect();
+    await xrplClient.disconnect();
     return NextResponse.json({ success: true, escrowId: data.id, txHash: signedTx.hash });
 
   } catch (error: any) {
-    await client.disconnect();
+    await xrplClient.disconnect();
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
 }

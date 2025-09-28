@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Client, Wallet } from 'xrpl';
-import { supabase } from '@/lib/supabaseClient';
+import client from '@/lib/supabaseClient';
 
 // --- The Seller's wallet seed is needed to sign the finish transaction ---
 const SELLER_WALLET_SEED = process.env.SELLER_WALLET_SEED!;
@@ -13,12 +13,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Missing escrowId' }, { status: 400 });
   }
 
-  const client = new Client(XRPL_NODE);
-  await client.connect();
+  const xrplClient = new Client(XRPL_NODE);
+  await xrplClient.connect();
 
   try {
     // 1. Fetch Escrow Details from Supabase
-    const { data: escrow, error } = await supabase
+    const { data: escrow, error } = await client
       .from('escrows')
       .select('*')
       .eq('id', escrowId)
@@ -39,25 +39,25 @@ export async function POST(request: Request) {
       Fulfillment: escrow.xrpl_preimage, // The secret key
     };
 
-    const preparedTx = await client.autofill(escrowFinishTx);
+    const preparedTx = await xrplClient.autofill(escrowFinishTx);
     const signedTx = sellerWallet.sign(preparedTx);
-    const txResult = await client.submitAndWait(signedTx.tx_blob);
+    const txResult = await xrplClient.submitAndWait(signedTx.tx_blob);
 
     if (txResult.result.meta?.TransactionResult !== 'tesSUCCESS') {
         throw new Error(`Escrow finish failed: ${txResult.result.meta?.TransactionResult}`);
     }
 
     // 3. Update the Escrow Status in Supabase
-    await supabase.from('escrows').update({
+    await client.from('escrows').update({
         status: 'completed',
         finish_tx_hash: signedTx.hash
     }).eq('id', escrowId);
 
-    await client.disconnect();
+    await xrplClient.disconnect();
     return NextResponse.json({ success: true, txHash: signedTx.hash });
 
   } catch (error: any) {
-    await client.disconnect();
+    await xrplClient.disconnect();
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
 }

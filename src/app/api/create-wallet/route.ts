@@ -1,7 +1,7 @@
 // app/api/create-wallet/route.ts
 import { NextResponse } from 'next/server';
 import { Wallet } from 'xrpl';
-import { supabase } from '@/lib/supabaseClient';
+import client from '@/lib/supabaseClient';
 import { create } from 'domain';
 
 type WalletData = {
@@ -20,7 +20,7 @@ export async function POST() {
       seed: wallet.seed!,
     };
 
-    await supabase.from('wallets').insert(newWalletData);
+    await client.from('wallets').insert(newWalletData);
 
     return NextResponse.json({
       address: wallet.classicAddress,
