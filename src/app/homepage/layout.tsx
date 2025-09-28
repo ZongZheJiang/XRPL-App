@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={geistSans.className}>
-        <main>
-          {" "}
-          {/* Add padding-top to account for fixed navbar */}
-          {children}
-        </main>
-      </body>
-    </html>
+    <main>
+      <Navbar />
+      <main className="min-h-screen pt-16">
+        {" "}
+        {/* Add padding-top to account for fixed navbar */}
+        {children}
+      </main>
+    </main>
   );
 }

@@ -3,10 +3,7 @@ import { Client, Wallet, xrpToDrops, dropsToXrp } from "xrpl";
 import {
   TrustSet,
   TrustSetFlags,
-  Payment,
-  IssuedCurrencyAmount,
-  AccountInfo,
-  AccountLines,
+  Payment
 } from "xrpl/dist/npm/models/transactions";
 
 // Initialize the client once and export it

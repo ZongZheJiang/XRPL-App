@@ -1,12 +1,12 @@
 // app/components/AuthManager.tsx
-import { supabase } from '../lib/supabaseClient'
+import { client } from '../lib/supabaseClient'
 import AuthForm from '@/components/AuthForm'
 import Dashboard from '@/components/Dashboard'
 import { NextResponse } from 'next/server'
 
 export default async function AuthManager() {
   // Fetch the user session
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await client.auth.getUser()
 
   // Conditionally render the correct component
   if (user) {

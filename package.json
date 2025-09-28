@@ -11,7 +11,7 @@
   "dependencies": {
     "@prisma/client": "^6.11.0",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.50.3",
+    "@supabase/supabase-js": "^2.58.0",
     "daisyui": "^5.0.43",
     "next": "15.3.3",
     "prisma": "^6.11.0",

@@ -25,9 +25,6 @@ function Home() {
             <button className="btn btn-primary text-neutral-content text-base md:text-lg px-6 py-2">
               <Link href="/login">Log In</Link>
             </button>
-            <button className="btn btn-primary text-neutral-content text-base md:text-lg px-6 py-2">
-              <Link href="/signup">Sign Up</Link>
-            </button>
           </div>
         </div>
       </div>
