@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { client } from '@/lib/supabaseClient' // Ensure this path is correct
+import client from '@/lib/supabaseClient' // Ensure this path is correct
 import { useRouter } from 'next/navigation' // Correct hook
 import { set } from 'zod'
 

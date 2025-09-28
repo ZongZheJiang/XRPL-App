@@ -1,5 +1,5 @@
 // app/components/AuthManager.tsx
-import { client } from '../lib/supabaseClient'
+import client from '../lib/supabaseClient'
 import AuthForm from '@/components/AuthForm'
 import Dashboard from '@/components/Dashboard'
 import { NextResponse } from 'next/server'
